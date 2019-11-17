@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import Prismic from "prismic-javascript";
+import PrismicReact from "prismic-reactjs";
+import "./App.scss";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Frontpage from "./components/Frontpage";
+import About from "./components/About";
+import Portfolio from "./components/Portfolio";
 
-function App() {
+const App = () => {
+  const [prismic, setPrismic] = useState();
+  useEffect(() => {
+    Prismic.api("http://portfolio-aesa.prismic.io/api/v2").then(api => {
+      setPrismic(api);
+    });
+  }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="frontpage-image"></div>
+      <Header prismic={prismic} />
+      <Router>
+        <route path="/home" exact>
+          <Frontpage prismic={prismic} />
+        </route>
+        <route path="/awesome">
+          <About prismic={prismic} />
+        </route>
+        <route path="/portfolio ">
+          <Portfolio prismic={prismic} />
+        </route>
+      </Router>
+      <Footer prismic={prismic} />
     </div>
   );
-}
+};
 
 export default App;
